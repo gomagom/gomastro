@@ -6,16 +6,52 @@ import {getSortedPosts} from "../utils/content-utils";
 import {getPostUrlBySlug} from "../utils/url-utils";
 import {PAGE_SIZE} from "../constants/constants";
 import PostPage from "../components/PostPage.astro";
+import fetchApi from '../library/strapi';
+import type Article from '../interfaces/blog';
+
+// export async function getStaticPaths({ paginate }) {
+//     const allBlogPosts = await getBlogs({ fields: ["title", "tags", "category", "publishedAt", "id", "eyecatch", "description"] });
+//     const newAllBlogPosts = allBlogPosts.contents.map(content => ({
+//         id: content.id,
+//         slug: content.id,
+//         data: {
+//             title: content.title,
+//             tags: content.tags.map(tag => tag.tag),
+//             category: content.category.name,
+//             published: new Date(content.publishedAt),
+//             image: content.eyecatch.url,
+//             description: content.description,
+//             draft: true,
+//         },
+//     }));
+//     return paginate(newAllBlogPosts, { pageSize: PAGE_SIZE });
+// }
 
 export async function getStaticPaths({ paginate }) {
-    const allBlogPosts = await getSortedPosts();
-    return paginate(allBlogPosts, { pageSize: PAGE_SIZE });
+    const allBlogPosts = await fetchApi<Article[]>({
+        endpoint: 'blogs?populate=*', // the content type to fetch
+        wrappedByKey: 'data', // the key to unwrap the response
+    });
+    const newAllBlogPosts = allBlogPosts.map(content => ({
+        id: content.id,
+        slug: content.attributes.slug,
+        data: {
+            title: content.attributes.title,
+            tags: content.attributes.tags.data.map(tag => tag.attributes.name),
+            category: content.attributes.category.data.attributes.name,
+            published: new Date(content.attributes.publishedAt),
+            image: content.attributes.thumbnail.data?.attributes.url,
+            description: content.attributes.description,
+            content: content.attributes.content,
+            draft: true,
+        },
+    }));
+    return paginate(newAllBlogPosts, { pageSize: PAGE_SIZE });
 }
 
 const {page} = Astro.props;
 
 const len = page.data.length;
-
 ---
 
 <MainGridLayout>

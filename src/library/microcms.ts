@@ -29,6 +29,21 @@ export type CategoryResponse = {
   contents: Category[];
 };
 
+export type Tag = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  revisedAt: string;
+  tag: string;
+};
+export type TagResponse = {
+  totalCount: number;
+  offset: number;
+  limit: number;
+  contents: Tag[];
+};
+
 export type Blog = {
   id: string;
   createdAt: string;
@@ -36,6 +51,7 @@ export type Blog = {
   publishedAt: string;
   revisedAt: string;
   title: string;
+  description: string;
   content: string;
   eyecatch: {
     url: string;
@@ -43,6 +59,7 @@ export type Blog = {
     width: number;
   };
   category: Category;
+  tags: Tag[];
 };
 export type BlogResponse = {
   totalCount: number;
