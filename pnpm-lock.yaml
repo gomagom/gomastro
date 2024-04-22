@@ -20,6 +20,12 @@ importers:
       '@fontsource-variable/jetbrains-mono':
         specifier: ^5.0.20
         version: 5.0.20
+      '@fontsource-variable/m-plus-1-code':
+        specifier: ^5.0.19
+        version: 5.0.19
+      '@fontsource-variable/noto-sans-jp':
+        specifier: ^5.0.19
+        version: 5.0.19
       '@fontsource/roboto':
         specifier: ^5.0.12
         version: 5.0.12
@@ -1014,6 +1020,12 @@ packages:
 
   '@fontsource-variable/jetbrains-mono@5.0.20':
     resolution: {integrity: sha512-IWJnmY9vT5Olcac1vzA7FMdnojCrZWMq+g7SqC2jsFpY0LQTjIgp9gBjjw9kUOkNbLw37/evZO4w6rdPeMA68A==}
+
+  '@fontsource-variable/m-plus-1-code@5.0.19':
+    resolution: {integrity: sha512-niQlxN0oNoxsS9hcbJJzosYyJW7t8sXduxxKFQ0IKwvk+/eY3S0qROVzaURXUcoWv1a7c3EpfOCscpPd+UCggw==}
+
+  '@fontsource-variable/noto-sans-jp@5.0.19':
+    resolution: {integrity: sha512-fAhvax6qyagBBf5x8WoIMxNsofgytN4e0cBn1eGgYHhbr4snWA+NxCHkaH+jlOv7nSv9ZzzsSusslkcsRJwGYg==}
 
   '@fontsource/roboto@5.0.12':
     resolution: {integrity: sha512-x0o17jvgoSSbS9OZnUX2+xJmVRvVCfeaYJjkS7w62iN7CuJWtMf5vJj8LqgC7ibqIkitOHVW+XssRjgrcHn62g==}
@@ -5643,6 +5655,10 @@ snapshots:
     optional: true
 
   '@fontsource-variable/jetbrains-mono@5.0.20': {}
+
+  '@fontsource-variable/m-plus-1-code@5.0.19': {}
+
+  '@fontsource-variable/noto-sans-jp@5.0.19': {}
 
   '@fontsource/roboto@5.0.12': {}
 
