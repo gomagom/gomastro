@@ -11,26 +11,42 @@ import License from "@components/misc/License.astro";
 import {licenseConfig} from "src/config";
 import Markdown from "@components/misc/Markdown.astro";
 import path from "path";
-import { getBlogs } from '@/library/microcms';
+import fetchApi from '../../library/strapi';
+import type Blog from '../../interfaces/blog';
 
 export async function getStaticPaths() {
-    const blogEntries = await getBlogs({ fields: ["id", "title"] });
-    return blogEntries.contents.map((entry,index,array) => ({
-        params: { slug: entry.id },
-        props: { 
-            entry,
-            tags: entry.tags.map(tag => tag.tag),
+    const blogEntries = await fetchApi<Blog[]>({
+        endpoint: 'blogs?populate=*', // the content type to fetch
+        wrappedByKey: 'data', // the key to unwrap the response
+    });
+    return blogEntries.map(content => ({
+        params: { slug: content.attributes.slug },
+        props: {
+            entry: {
+                id: content.id,
+                slug: content.attributes.slug,
+                data: {
+                    title: content.attributes.title,
+                    tags: content.attributes.tags.data.map((tag:any) => tag.attributes.name),
+                    category: content.attributes.category.data.attributes.name,
+                    published: new Date(content.attributes.publishedAt),
+                    image: content.attributes.thumbnail.data?.attributes.url,
+                    description: content.attributes.description,
+                    Content: content.attributes.content,
+                    draft: true,
+                },
+            },
         },
     }));
 }
 
-const { entry, tags } = Astro.props;
-// const { Content } = await entry.render();
+const { entry } = Astro.props;
+const { Content } = entry.data;
 
 // const { remarkPluginFrontmatter } = await entry.render();
 
 ---
-<MainGridLayout banner={entry.eyecatch.url} title={entry.title}>
+<MainGridLayout banner={entry.data.image} title={entry.data.title}>
     <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative mb-4">
         <div id="post-container" class:list={["card-base z-10 px-6 md:px-9 pt-6 pb-4 relative w-full ",
             {}

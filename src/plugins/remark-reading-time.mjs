@@ -11,5 +11,6 @@ export function remarkReadingTime() {
       Math.round(readingTime.minutes),
     )
     data.astro.frontmatter.words = readingTime.words
+    data.astro.frontmatter.minutesRead = readingTime.text
   }
 }

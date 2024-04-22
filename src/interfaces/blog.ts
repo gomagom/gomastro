@@ -5,9 +5,9 @@ export default interface Blog {
     description: string;
     content: string;
     slug: string;
-    category: string;
-    tags: string[];
-    thumbnail: string;
+    category: any;
+    tags: any;
+    thumbnail: any;
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
