@@ -20,7 +20,7 @@ export async function getStaticPaths() {
         endpoint: 'blogs?populate=*', // the content type to fetch
         wrappedByKey: 'data', // the key to unwrap the response
     });
-    return blogEntries.map(content => ({
+    return blogEntries.map((content,index,array) => ({
         params: { slug: content.attributes.slug },
         props: {
             entry: {
@@ -35,6 +35,10 @@ export async function getStaticPaths() {
                     description: content.attributes.description,
                     content: content.attributes.content,
                     draft: true,
+                    nextSlug: array[index - 1]?.attributes.slug,
+                    nextTitle: array[index - 1]?.attributes.title,
+                    prevSlug: array[index + 1]?.attributes.slug,
+                    prevTitle: array[index + 1]?.attributes.title,
                 },
             },
         },
@@ -110,19 +114,19 @@ remarkReadingTime(entry.data);
     </div>
 
     <div class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full">
-        <a href={getPostUrlBySlug(entry.data.nextSlug)} class="w-full font-bold overflow-hidden active:scale-95">
-            {entry.data.nextSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center justify-start gap-4" >
+        <a href={getPostUrlBySlug(entry.data.prevSlug)} class="w-full font-bold overflow-hidden active:scale-95">
+            {entry.data.prevSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center justify-start gap-4" >
                 <Icon name="material-symbols:chevron-left-rounded" size={32} class="text-[var(--primary)]" />
                 <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
-                    {entry.data.nextTitle}
+                    {entry.data.prevTitle}
                 </div>
             </div>}
         </a>
 
-        <a href={getPostUrlBySlug(entry.data.prevSlug)} class="w-full font-bold overflow-hidden active:scale-95">
-            {entry.data.prevSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center justify-end gap-4">
+        <a href={getPostUrlBySlug(entry.data.nextSlug)} class="w-full font-bold overflow-hidden active:scale-95">
+            {entry.data.nextSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center justify-end gap-4">
                 <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
-                    {entry.data.prevTitle}
+                    {entry.data.nextTitle}
                 </div>
                 <Icon name="material-symbols:chevron-right-rounded" size={32} class="text-[var(--primary)]" />
             </div>}

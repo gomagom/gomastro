@@ -34,6 +34,7 @@ export async function TransformMarkdownToHtml(input: string) {
     .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })
     // .use(rehypeImageTransform)
+    .use(remarkMath)
     .use(rehypeKatex)
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings)
@@ -41,7 +42,8 @@ export async function TransformMarkdownToHtml(input: string) {
       theme: 'one-dark-pro', 
       onVisitHighlightedLine(node) {
         node.properties.className?.push('highlighted');
-      }, 
+      },
+      defaultLang: 'plaintext',
     })
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(input);
