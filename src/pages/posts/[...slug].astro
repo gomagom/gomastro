@@ -13,6 +13,7 @@ import Markdown from "@components/misc/Markdown.astro";
 import path from "path";
 import fetchApi from '../../library/strapi';
 import type Blog from '../../interfaces/blog';
+import { TransformMarkdownToHtml, remarkReadingTime } from '../../utils/custom-utils.ts';
 
 export async function getStaticPaths() {
     const blogEntries = await fetchApi<Blog[]>({
@@ -32,7 +33,7 @@ export async function getStaticPaths() {
                     published: new Date(content.attributes.publishedAt),
                     image: content.attributes.thumbnail.data?.attributes.url,
                     description: content.attributes.description,
-                    Content: content.attributes.content,
+                    content: content.attributes.content,
                     draft: true,
                 },
             },
@@ -41,9 +42,9 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = entry.data;
+const content = await TransformMarkdownToHtml(entry.data.content);
 
-// const { remarkPluginFrontmatter } = await entry.render();
+remarkReadingTime(entry.data);
 
 ---
 <MainGridLayout banner={entry.data.image} title={entry.data.title}>
@@ -57,13 +58,13 @@ const { Content } = entry.data;
                     <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
                         <Icon name="material-symbols:notes-rounded"></Icon>
                     </div>
-                    <!-- <div class="text-sm">{remarkPluginFrontmatter.words} {" " + i18n(I18nKey.wordsCount)}</div> -->
+                    <div class="text-sm">{entry.data.words} {" " + i18n(I18nKey.wordsCount)}</div>
                 </div>
                 <div class="flex flex-row items-center">
                     <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
                         <Icon name="material-symbols:schedule-outline-rounded"></Icon>
                     </div>
-                    <!-- <div class="text-sm">{remarkPluginFrontmatter.minutes} {" " + i18n(I18nKey.minutesCount)}</div> -->
+                    <div class="text-sm">{entry.data.minutes} {" " + i18n(I18nKey.minutesCount)}</div>
                 </div>
             </div>
 
@@ -100,7 +101,7 @@ const { Content } = entry.data;
 
 
             <Markdown class="mb-6 markdown-content onload-animation">
-                <Content />
+                <Fragment set:html={content} />
             </Markdown>
 
             {licenseConfig.enable && <License title={entry.data.title} slug={entry.slug} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
