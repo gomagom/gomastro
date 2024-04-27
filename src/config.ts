@@ -38,7 +38,7 @@ export const navBarConfig: NavBarConfig = {
 }
 
 export const profileConfig: ProfileConfig = {
-  avatar: 'assets/images/avatar.png',
+  avatar: import.meta.env.STRAPI_AVATAR,
   name: 'ごま',
   bio: '休日ゲーマー，平日ゲーマー',
   start_year: 2021,

@@ -15,6 +15,7 @@
 4. 新しい記事は`strapi`経由で公開できます．
    - `src/.env`を作成し，以下の環境変数を入力
       ```Properties
+      STRAPI_AVATAR="アバターのURL"
       STRAPI_URL="https://[strapiのドメイン]"
       STRAPI_DOMAIN="[strapiのドメイン]"
       STRAPI_TOKEN="[API用に発行したトークン]"
