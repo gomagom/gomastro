@@ -5,6 +5,7 @@ import {fromMarkdown} from 'mdast-util-from-markdown';
 
 import { unified, type Plugin } from "unified";
 import remarkParse from "remark-parse";
+// import rehypeParse from "rehype-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypePrettyCode  from 'rehype-pretty-code';
@@ -15,10 +16,13 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkBreaks from "remark-breaks";
 import remarkDirective from 'remark-directive';
+import rlc from 'remark-link-card';
 import remarkDirectiveRehype from 'remark-directive-rehype';
 import type { Root, Element } from "hast";
 import { visitParents as visit } from "unist-util-visit-parents"
 import { getImage } from "astro:assets";
+
+import defineConfig from '../../astro.config.mjs'
 
 export function remarkReadingTime(data) {
   const textOnPage = toString(fromMarkdown(data.content))
@@ -59,9 +63,34 @@ const rehypeImageTransform: Plugin<[], Root, Root> = () => {
   }
 }
 
+interface LinkOptions {
+  domain: string;
+}
+
+const rehypeExternalLink: Plugin<[], Root, Root> = (options?: LinkOptions) => {
+  const domain = new URL(defineConfig.site ?? "").hostname;
+  const siteDomain = options?.domain ?? domain;
+
+  return async (tree) => {
+    visit(tree, "element", (node: Element) => {
+      const href = ((node.properties?.href ?? "") as string);
+      let adomain: string;
+      try {
+        adomain = new URL(href).hostname;
+      } catch {
+        adomain = "";
+      }
+      if (node.tagName === "a" && adomain !== "" && adomain !== siteDomain) {
+        node.properties.target = "_blank";
+      }
+    });
+  };
+};
+
 export async function TransformMarkdownToHtml(input: string) {
-  const content = await unified()
+  const mdcontent = await unified()
     .use(remarkParse)
+    .use(rlc, { shortenUrl: true })
     .use(remarkDirective)
     .use(remarkDirectiveRehype)
     .use(remarkBreaks)
@@ -69,6 +98,7 @@ export async function TransformMarkdownToHtml(input: string) {
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(remarkMath)
     .use(rehypeImageTransform)
+    .use(rehypeExternalLink)
     .use(rehypeKatex)
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings, {
@@ -101,5 +131,10 @@ export async function TransformMarkdownToHtml(input: string) {
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(input);
 
-  return content.toString();
+  // const content = await unified()
+  //   .use(rehypeParse, { fragment: true })
+  //   .use(rehypeExternalLink)
+  //   .use(rehypeStringify, { allowDangerousHtml: true })
+  //   .process(mdcontent.toString());
+  return mdcontent.toString();
 }
