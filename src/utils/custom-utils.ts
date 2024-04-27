@@ -13,6 +13,8 @@ import remarkGfm from "remark-gfm";
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkBreaks from "remark-breaks";
+import remarkDirective from 'remark-directive';
+import remarkDirectiveRehype from 'remark-directive-rehype';
 // import { Root, Element, Text } from "hast";
 // import { visitParents as visit } from "unist-util-visit-parents"
 // import { getImage } from "@astrojs/image";
@@ -30,6 +32,8 @@ export function remarkReadingTime(data) {
 export async function TransformMarkdownToHtml(input: string) {
   const content = await unified()
     .use(remarkParse)
+    .use(remarkDirective)
+    .use(remarkDirectiveRehype)
     .use(remarkBreaks)
     .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })

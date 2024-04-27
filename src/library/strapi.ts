@@ -24,13 +24,15 @@ export default async function fetchApi<T>({
   }
 
   const url = new URL(`${import.meta.env.STRAPI_URL}/api/${endpoint}`);
+  const headers = new Headers();
+  headers.set('Authorization', `Bearer ${import.meta.env.STRAPI_TOKEN}`);
 
   if (query) {
     Object.entries(query).forEach(([key, value]) => {
       url.searchParams.append(key, value);
     });
   }
-  const res = await fetch(url.toString());
+  const res = await fetch(url.toString(), { headers });
   let data = await res.json();
 
   if (wrappedByKey) {
