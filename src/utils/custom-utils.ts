@@ -15,6 +15,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkBreaks from "remark-breaks";
 import remarkDirective from 'remark-directive';
+import rlc from 'remark-link-card';
 import remarkDirectiveRehype from 'remark-directive-rehype';
 import type { Root, Element } from "hast";
 import { visitParents as visit } from "unist-util-visit-parents"
@@ -62,6 +63,7 @@ const rehypeImageTransform: Plugin<[], Root, Root> = () => {
 export async function TransformMarkdownToHtml(input: string) {
   const content = await unified()
     .use(remarkParse)
+    .use(rlc, { shortenUrl: true })
     .use(remarkDirective)
     .use(remarkDirectiveRehype)
     .use(remarkBreaks)
