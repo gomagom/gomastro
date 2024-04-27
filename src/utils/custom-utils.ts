@@ -142,8 +142,6 @@ const cachedData: any = {}
 export const cache = async (key: string, handler: () => Promise<any>) => {
   if (!(key in cachedData)) {
     cachedData[key] = await handler()
-    console.log("実行！")
   }
-  console.log(key)
   return cachedData[key]
 }
