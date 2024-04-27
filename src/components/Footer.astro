@@ -1,10 +1,11 @@
 ---
 
-import {profileConfig} from "../config";
+import { profileConfig } from '../config'
 
-const now_year = new Date().getFullYear();
-const start_year = profileConfig.start_year;
-const year = now_year === start_year ? start_year : `${start_year} - ${now_year}`;
+const now_year = new Date().getFullYear()
+const start_year = profileConfig.start_year
+const year =
+  now_year === start_year ? start_year : `${start_year} - ${now_year}`
 ---
 
 <div class="card-base max-w-[var(--page-width)] min-h-[4.5rem] rounded-b-none mx-auto flex justify-center items-center px-6">

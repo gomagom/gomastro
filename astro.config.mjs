@@ -11,6 +11,7 @@ import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs"
 import svelte from "@astrojs/svelte"
 import swup from '@swup/astro';
 import { loadEnv } from "vite";
+import sitemap from '@astrojs/sitemap';
 
 const oklchToHex = (str) => {
   const DEFAULT_HUE = 250
@@ -50,6 +51,7 @@ export default defineConfig({
       Image: false,
     }),
     svelte(),
+    sitemap(),
   ],
   markdown: {
     remarkPlugins: [remarkMath, remarkReadingTime],

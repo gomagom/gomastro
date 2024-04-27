@@ -1,15 +1,15 @@
-import type { Blog, Category, Info } from '../interfaces/blog';
+import type { Blog, Category, Info } from '../interfaces/blog'
 
 interface Props {
-  endpoint: string;
-  query?: Record<string, string>;
-  wrappedByKey?: string;
-  wrappedByList?: boolean;
+  endpoint: string
+  query?: Record<string, string>
+  wrappedByKey?: string
+  wrappedByList?: boolean
 }
 
 interface Transform {
-  data: Blog[] | Category[] | Info[];
-  type: string;
+  data: Blog[] | Category[] | Info[]
+  type: string
 }
 
 /**
@@ -27,30 +27,30 @@ export async function fetchApi<T>({
   wrappedByList,
 }: Props): Promise<T> {
   if (endpoint.startsWith('/')) {
-    endpoint = endpoint.slice(1);
+    endpoint = endpoint.slice(1)
   }
 
-  const url = new URL(`${import.meta.env.STRAPI_URL}/api/${endpoint}`);
-  const headers = new Headers();
-  headers.set('Authorization', `Bearer ${import.meta.env.STRAPI_TOKEN}`);
+  const url = new URL(`${import.meta.env.STRAPI_URL}/api/${endpoint}`)
+  const headers = new Headers()
+  headers.set('Authorization', `Bearer ${import.meta.env.STRAPI_TOKEN}`)
 
   if (query) {
     Object.entries(query).forEach(([key, value]) => {
-      url.searchParams.append(key, value);
-    });
+      url.searchParams.append(key, value)
+    })
   }
-  const res = await fetch(url.toString(), { headers });
-  let data = await res.json();
+  const res = await fetch(url.toString(), { headers })
+  let data = await res.json()
 
   if (wrappedByKey) {
-    data = data[wrappedByKey];
+    data = data[wrappedByKey]
   }
 
   if (wrappedByList) {
-    data = data[0];
+    data = data[0]
   }
 
-  return data as T;
+  return data as T
 }
 
 /**
@@ -60,25 +60,25 @@ export async function fetchApi<T>({
  * @returns
  */
 
-export async function transformData<T>({
-  data,
-  type,
-}: Transform): Promise<T> {
+export async function transformData<T>({ data, type }: Transform): Promise<T> {
   // biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
-  let transformed;
+  let transformed
   switch (type) {
     case 'blog': {
-      transformed = data.map((content: any, index: number, array: Array<any>) => {
-        let thumbnail_url = content.attributes.thumbnail.data?.attributes.url;
-        if (thumbnail_url != null) {
-          thumbnail_url = `${import.meta.env.STRAPI_URL}${thumbnail_url}`;
-        }
-        return {
-          id: String(content.id),
-          slug: content.attributes.slug,
-          data: {
+      transformed = data.map(
+        (content: any, index: number, array: Array<any>) => {
+          let thumbnail_url = content.attributes.thumbnail.data?.attributes.url
+          if (thumbnail_url != null) {
+            thumbnail_url = `${import.meta.env.STRAPI_URL}${thumbnail_url}`
+          }
+          return {
+            id: String(content.id),
+            slug: content.attributes.slug,
+            data: {
               title: content.attributes.title,
-              tags: content.attributes.tags.data.map((tag:any) => tag.attributes.name),
+              tags: content.attributes.tags.data.map(
+                (tag: any) => tag.attributes.name,
+              ),
               category: content.attributes.category.data.attributes.name,
               published: new Date(content.attributes.publishedAt),
               image: thumbnail_url,
@@ -89,29 +89,38 @@ export async function transformData<T>({
               nextTitle: array[index - 1]?.attributes.title,
               prevSlug: array[index + 1]?.attributes.slug,
               prevTitle: array[index + 1]?.attributes.title,
-          },
-        }
-      });
-      break;
+            },
+          }
+        },
+      )
+      transformed.sort((a: any, b: any) =>
+        -(a.data.published.getTime() - b.data.published.getTime()),
+      )
+      break
     }
     case 'category': {
       transformed = data.map((content: any) => ({
-          id: String(content.id),
-          name: content.attributes.name,
-      }));
-      break;
+        id: String(content.id),
+        name: content.attributes.name,
+      }))
+      transformed.sort((a: any, b: any) =>
+        a.name.localeCompare(b.name, 'ja'),
+      )
+      break
     }
     case 'about': {
       transformed = data.map((content: any) => ({
-          id: String(content.id),
-          data: {
-            title: content.attributes.title,
-            content: content.attributes.content,
-          }
-      }));
-      transformed = transformed.filter((content: any) => content.data.title === 'About')[0];
-      break;
+        id: String(content.id),
+        data: {
+          title: content.attributes.title,
+          content: content.attributes.content,
+        },
+      }))
+      transformed = transformed.filter(
+        (content: any) => content.data.title === 'About',
+      )[0]
+      break
     }
   }
-  return transformed as T;
+  return transformed as T
 }
