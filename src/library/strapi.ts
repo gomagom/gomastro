@@ -1,4 +1,6 @@
 import type { Blog, Category, Info } from '../interfaces/blog'
+import { cache } from '../utils/custom-utils'
+
 
 interface Props {
   endpoint: string
@@ -38,8 +40,11 @@ export async function fetchApi<T>({
       url.searchParams.append(key, value)
     })
   }
-  const res = await fetch(url.toString(), { headers })
-  let data = await res.json()
+  const res = await cache(endpoint, async () => {
+    const response = await fetch(url.toString(), { headers })
+    return response.json()
+  })
+  let data = await res
 
   if (wrappedByKey) {
     data = data[wrappedByKey]

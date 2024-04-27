@@ -44,8 +44,10 @@ const rehypeImageTransform: Plugin<[], Root, Root> = () => {
     });
     // convert the images
     for (const key of imageUrls.keys()) {
-      const img = await getImage({ src: key, format: "webp", inferSize: true, quality: 80 });
-      imageUrls.set(key, img.src);
+      const img = await cache(key, async () => {
+        return (await getImage({ src: key, format: "webp", inferSize: true, quality: 80 })).src;
+      });
+      imageUrls.set(key, img);
     }
 
     // replace the images
@@ -133,4 +135,15 @@ export async function TransformMarkdownToHtml(input: string) {
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(mdcontent.toString());
   return content.toString();
+}
+
+const cachedData: any = {}
+
+export const cache = async (key: string, handler: () => Promise<any>) => {
+  if (!(key in cachedData)) {
+    cachedData[key] = await handler()
+    console.log("実行！")
+  }
+  console.log(key)
+  return cachedData[key]
 }
