@@ -1,4 +1,4 @@
-import type { Blog, Category } from '../interfaces/blog';
+import type { Blog, Category, Info } from '../interfaces/blog';
 
 interface Props {
   endpoint: string;
@@ -8,7 +8,7 @@ interface Props {
 }
 
 interface Transform {
-  data: Blog[] | Category[];
+  data: Blog[] | Category[] | Info[];
   type: string;
 }
 
@@ -99,6 +99,17 @@ export async function transformData<T>({
           id: String(content.id),
           name: content.attributes.name,
       }));
+      break;
+    }
+    case 'about': {
+      transformed = data.map((content: any) => ({
+          id: String(content.id),
+          data: {
+            title: content.attributes.title,
+            content: content.attributes.content,
+          }
+      }));
+      transformed = transformed.filter((content: any) => content.data.title === 'About')[0];
       break;
     }
   }

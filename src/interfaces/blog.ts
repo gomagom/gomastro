@@ -48,3 +48,21 @@ export interface AstroCategory {
   id: string;
   name: string;
 }
+
+export interface Info {
+  id: number;
+  attributes: {
+    title: string;
+    content: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export interface AstroInfo {
+  id: number;
+  data: {
+    title: string;
+    content: string;
+  };
+}

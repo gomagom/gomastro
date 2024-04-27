@@ -34,6 +34,7 @@ export const profileConfig: ProfileConfig = {
   avatar: 'assets/images/avatar.png',
   name: 'ごま',
   bio: '休日ゲーマー，平日ゲーマー',
+  start_year: 2021,
   links: [
     {
       name: 'Twitter',
