@@ -84,6 +84,7 @@ export async function transformData<T>({ data, type }: Transform): Promise<T> {
               ),
               category: content.attributes.category.data.attributes.name,
               published: new Date(content.attributes.publishedAt),
+              updated: new Date(content.attributes.updatedAt),
               image: thumbnail_url,
               description: content.attributes.description,
               content: content.attributes.content,
