@@ -39,6 +39,7 @@ export async function fetchApi<T>({
       url.searchParams.append(key, value)
     })
   }
+  console.log("テスト2", url.toString())
   const res = await fetch(url.toString(), { headers })
   let data = await res.json()
 
@@ -49,7 +50,6 @@ export async function fetchApi<T>({
   if (wrappedByList) {
     data = data[0]
   }
-  console.log("テスト2", data)
   return data as T
 }
 
