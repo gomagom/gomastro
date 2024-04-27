@@ -29,7 +29,7 @@ export async function fetchApi<T>({
   if (endpoint.startsWith('/')) {
     endpoint = endpoint.slice(1)
   }
-
+  console.log(import.meta.env.STRAPI_URL)
   const url = new URL(`${import.meta.env.STRAPI_URL}/api/${endpoint}`)
   const headers = new Headers()
   headers.set('Authorization', `Bearer ${import.meta.env.STRAPI_TOKEN}`)
