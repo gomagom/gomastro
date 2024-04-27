@@ -1,5 +1,6 @@
 ---
 import path from "path";
+import { getImage } from "astro:assets";
 interface Props {
     id?: string
     src: string;
@@ -26,7 +27,6 @@ if (isLocal) {
 ---
 <div class:list={[className, 'overflow-hidden relative']}>
     <div class="transition absolute inset-0 dark:bg-black/10 bg-opacity-50 pointer-events-none"></div>
-    {isLocal && <Image src={img} alt={alt || ""} class="w-full h-full object-center object-cover" />}
-    {!isLocal && <img src={src} alt={alt || ""} class="w-full h-full object-center object-cover" />}
+    {isLocal && <Image src={img} alt={alt || ""} class="w-full h-full object-center object-cover" decoding="async" loading="lazy" />}
+    {!isLocal && <img src={(await getImage({src: src, format: "webp", inferSize: true, quality: 80 })).src} alt={alt || ""} class="w-full h-full object-center object-cover" decoding="async" loading="lazy" />}
 </div>
-

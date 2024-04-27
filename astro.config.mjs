@@ -10,6 +10,7 @@ import remarkMath from "remark-math"
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs"
 import svelte from "@astrojs/svelte"
 import swup from '@swup/astro';
+import { loadEnv } from "vite";
 
 const oklchToHex = (str) => {
   const DEFAULT_HUE = 250
@@ -91,4 +92,8 @@ export default defineConfig({
       },
     },
   },
+  image: {
+    domains: [loadEnv(process.env.NODE_ENV, process.cwd(), '').STRAPI_URL],
+    remotePatterns: [{ protocol: "https" }],
+  }
 })
