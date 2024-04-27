@@ -5,6 +5,7 @@ import {fromMarkdown} from 'mdast-util-from-markdown';
 
 import { unified, type Plugin } from "unified";
 import remarkParse from "remark-parse";
+import rehypeParse from "rehype-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypePrettyCode  from 'rehype-pretty-code';
@@ -41,7 +42,6 @@ const rehypeImageTransform: Plugin<[], Root, Root> = () => {
         imageUrls.set(src, "");
       }
     });
-    console.log(imageUrls)
     // convert the images
     for (const key of imageUrls.keys()) {
       const img = await getImage({ src: key, format: "webp", inferSize: true, quality: 80 });
@@ -60,10 +60,34 @@ const rehypeImageTransform: Plugin<[], Root, Root> = () => {
   }
 }
 
+interface LinkOptions {
+  domain: string;
+}
+
+const rehypeExternalLink: Plugin<[], Root, Root> = (options?: LinkOptions) => {
+  const domain = "blog.gomatamago.net";
+  const siteDomain = options?.domain ?? domain;
+
+  return async (tree) => {
+    visit(tree, "element", (node: Element) => {
+      const href = ((node.properties?.href ?? "") as string);
+      let adomain: string;
+      try {
+        adomain = new URL(href).hostname;
+      } catch {
+        adomain = "";
+      }
+      if (node.tagName === "a" && adomain !== "" && adomain !== siteDomain) {
+        node.properties.target = "_blank";
+      }
+    });
+  };
+};
+
 export async function TransformMarkdownToHtml(input: string) {
-  const content = await unified()
+  const mdcontent = await unified()
     .use(remarkParse)
-    .use(rlc, { shortenUrl: true })
+    .use(rlc, { cache: false, shortenUrl: true })
     .use(remarkDirective)
     .use(remarkDirectiveRehype)
     .use(remarkBreaks)
@@ -103,5 +127,10 @@ export async function TransformMarkdownToHtml(input: string) {
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(input);
 
+  const content = await unified()
+    .use(rehypeParse, { fragment: true })
+    .use(rehypeExternalLink)
+    .use(rehypeStringify, { allowDangerousHtml: true })
+    .process(mdcontent.toString());
   return content.toString();
 }
