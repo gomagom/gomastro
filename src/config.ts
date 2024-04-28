@@ -42,7 +42,7 @@ export const profileConfig: ProfileConfig = {
   avatar: import.meta.env.STRAPI_AVATAR,
   name: 'ごま',
   bio: 'エンジニアのたまご',
-  start_year: 2021,
+  start_year: 2024,
   links: [
     {
       name: 'Twitter',
