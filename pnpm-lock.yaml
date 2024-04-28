@@ -23,18 +23,12 @@ importers:
       '@astrojs/tailwind':
         specifier: ^5.1.0
         version: 5.1.0(astro@4.4.15(@types/node@20.11.28)(lightningcss@1.24.1)(stylus@0.63.0)(terser@5.29.2)(typescript@5.4.2))(tailwindcss@3.4.1)
-      '@fontsource-variable/jetbrains-mono':
-        specifier: ^5.0.20
-        version: 5.0.20
-      '@fontsource-variable/m-plus-1-code':
+      '@fontsource/m-plus-1-code':
         specifier: ^5.0.19
         version: 5.0.19
-      '@fontsource-variable/noto-sans-jp':
+      '@fontsource/noto-sans-jp':
         specifier: ^5.0.19
         version: 5.0.19
-      '@fontsource/roboto':
-        specifier: ^5.0.12
-        version: 5.0.12
       '@swup/astro':
         specifier: ^1.4.0
         version: 1.4.0(@types/babel__core@7.20.5)
@@ -1228,17 +1222,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fontsource-variable/jetbrains-mono@5.0.20':
-    resolution: {integrity: sha512-IWJnmY9vT5Olcac1vzA7FMdnojCrZWMq+g7SqC2jsFpY0LQTjIgp9gBjjw9kUOkNbLw37/evZO4w6rdPeMA68A==}
+  '@fontsource/m-plus-1-code@5.0.19':
+    resolution: {integrity: sha512-4O2KLH3+X3sAaiaVV2qvkbXJbOXz37wwtIrFQzkqRAIrLvEYmrC48vkRVChAsrsdQQr501O0HDPYZ4maDqrfpg==}
 
-  '@fontsource-variable/m-plus-1-code@5.0.19':
-    resolution: {integrity: sha512-niQlxN0oNoxsS9hcbJJzosYyJW7t8sXduxxKFQ0IKwvk+/eY3S0qROVzaURXUcoWv1a7c3EpfOCscpPd+UCggw==}
-
-  '@fontsource-variable/noto-sans-jp@5.0.19':
-    resolution: {integrity: sha512-fAhvax6qyagBBf5x8WoIMxNsofgytN4e0cBn1eGgYHhbr4snWA+NxCHkaH+jlOv7nSv9ZzzsSusslkcsRJwGYg==}
-
-  '@fontsource/roboto@5.0.12':
-    resolution: {integrity: sha512-x0o17jvgoSSbS9OZnUX2+xJmVRvVCfeaYJjkS7w62iN7CuJWtMf5vJj8LqgC7ibqIkitOHVW+XssRjgrcHn62g==}
+  '@fontsource/noto-sans-jp@5.0.19':
+    resolution: {integrity: sha512-N0KUmSqX6tlAlnqFQnDywj9e+4RithtLgFGlcRt/85EI8rmDYJFYQCZVhc+xTIk5Kgr1gLtNToHZzK61BTsWqw==}
 
   '@iconify-json/fa6-brands@1.1.18':
     resolution: {integrity: sha512-vmeJP06Xbj0XbVGiBHg0q8H3M894d4bGXKCmiHt6JqUdpiGcIV7r96N+BOU4ZS1+hvpV57fTfXlFPiUfxAIfkg==}
@@ -6214,13 +6202,9 @@ snapshots:
   '@esbuild/win32-x64@0.20.2':
     optional: true
 
-  '@fontsource-variable/jetbrains-mono@5.0.20': {}
+  '@fontsource/m-plus-1-code@5.0.19': {}
 
-  '@fontsource-variable/m-plus-1-code@5.0.19': {}
-
-  '@fontsource-variable/noto-sans-jp@5.0.19': {}
-
-  '@fontsource/roboto@5.0.12': {}
+  '@fontsource/noto-sans-jp@5.0.19': {}
 
   '@iconify-json/fa6-brands@1.1.18':
     dependencies:
