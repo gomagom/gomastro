@@ -12,9 +12,16 @@ export const siteConfig: SiteConfig = {
   lang: 'ja',
   themeHue: 250,
   banner: {
-    enable: true,
+    enable: false,
     src: 'assets/images/demo-banner.png',
   },
+  favicon: [    // Leave this array empty to use the default favicon
+    // {
+    //   src: '/favicon/icon.png',    // Path of the favicon, relative to the /public directory
+    //   theme: 'light',              // (Optional) Either 'light' or 'dark', set only if you have different favicons for light and dark mode
+    //   sizes: '32x32',              // (Optional) Size of the favicon, set only if you have favicons of different sizes
+    // }
+  ]
 }
 
 export const navBarConfig: NavBarConfig = {
@@ -22,6 +29,7 @@ export const navBarConfig: NavBarConfig = {
     LinkPreset.Home,
     LinkPreset.Archive,
     LinkPreset.About,
+    LinkPreset.Privacy,
     {
       name: 'iSarver',
       url: 'https://blog.isarver.com/',
@@ -31,14 +39,15 @@ export const navBarConfig: NavBarConfig = {
 }
 
 export const profileConfig: ProfileConfig = {
-  avatar: 'assets/images/avatar.png',
+  avatar: import.meta.env.STRAPI_AVATAR,
   name: 'ごま',
-  bio: '休日ゲーマー，平日ゲーマー',
+  bio: 'エンジニアのたまご',
+  start_year: 2021,
   links: [
     {
       name: 'Twitter',
       icon: 'fa6-brands:x-twitter',
-      url: 'https://twitter.com',
+      url: 'https://twitter.com/gomatamago_0',
     },
     {
       name: 'Steam',

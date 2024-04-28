@@ -9,12 +9,21 @@ export type SiteConfig = {
     enable: boolean
     src: string
   }
+
+  favicon: Favicon[]
+}
+
+export type Favicon = {
+  src: string,
+  theme?: 'light' | 'dark'
+  sizes?: string
 }
 
 export enum LinkPreset {
   Home = 0,
   Archive = 1,
   About = 2,
+  Privacy = 3,
 }
 
 export type NavBarLink = {
@@ -31,6 +40,7 @@ export type ProfileConfig = {
   avatar?: string
   name: string
   bio?: string
+  start_year: number
   links: {
     name: string
     url: string

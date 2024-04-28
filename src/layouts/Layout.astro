@@ -8,14 +8,17 @@ import ImageWrapper from "@components/misc/ImageWrapper.astro";
 
 import {pathsEqual} from "@utils/url-utils";
 import ConfigCarrier from "@components/ConfigCarrier.astro";
-import {siteConfig} from "@/config";
+import {profileConfig, siteConfig} from "@/config";
+import {Favicon} from "../types/config";
+import {defaultFavicons} from "../constants/icon";
 
 interface Props {
 	title: string;
 	banner: string;
+	description?: string;
 }
 
-let { title, banner } = Astro.props;
+let { title, banner, description } = Astro.props;
 
 const isHomePage = pathsEqual(Astro.url.pathname, '/');
 
@@ -62,6 +65,8 @@ if (title) {
 	pageTitle = `${siteConfig.title} - ${siteConfig.subtitle}`;
 }
 
+const favicons: Favicon[] = siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons
+
 ---
 
 <!DOCTYPE html>
@@ -71,19 +76,20 @@ if (title) {
 		<title>{pageTitle}</title>
 
 		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description">
+		<meta name="description" content={description || pageTitle}>
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<link rel="icon" media="(prefers-color-scheme: light)" href="/favicon/favicon-light-32.png" sizes="32x32">
-		<link rel="icon" media="(prefers-color-scheme: light)" href="/favicon/favicon-light-128.png" sizes="128x128">
-		<link rel="icon" media="(prefers-color-scheme: light)" href="/favicon/favicon-light-180.png" sizes="180x180">
-		<link rel="icon" media="(prefers-color-scheme: light)" href="/favicon/favicon-light-192.png" sizes="192x192">
-		<link rel="icon" media="(prefers-color-scheme: dark)"  href="/favicon/favicon-dark-32.png" sizes="32x32">
-		<link rel="icon" media="(prefers-color-scheme: dark)"  href="/favicon/favicon-dark-128.png" sizes="128x128">
-		<link rel="icon" media="(prefers-color-scheme: dark)"  href="/favicon/favicon-dark-180.png" sizes="180x180">
-		<link rel="icon" media="(prefers-color-scheme: dark)"  href="/favicon/favicon-dark-192.png" sizes="192x192">
+		{favicons.map(favicon => (
+			<link rel="icon"
+				  href={favicon.src}
+				  sizes={favicon.sizes}
+				  media={favicon.theme && `(prefers-color-scheme: ${favicon.theme})`}
+			/>
+		))}
 
-		<link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.16.9/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+		<link rel="stylesheet" href="/styles/katex.min.css">
+
+		<link rel="alternate" type="application/rss+xml" title={profileConfig.name} href={`${Astro.site}rss.xml`}/>
 
 		<style define:vars={{ configHue }}></style>  <!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
 
@@ -104,7 +110,7 @@ if (title) {
 <style is:global>
 	:root {
 		--hue: var(--configHue);
-		--page-width: 75rem;
+		--page-width: 90rem;
 	}
 </style>
 <style is:global>

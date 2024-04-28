@@ -64,6 +64,15 @@ const className = Astro.props.class;
         text-decoration-color: var(--link-active)
     /*&:after*/
     /*  background: var(--link-active)*/
+    figcaption[data-rehype-pretty-code-title]
+      padding: 0.28rem 0.2rem 0.2rem 0.2rem
+      font-size: 0.875rem
+      color: #bec4cf
+      text-align: left
+      display: inline-block
+      margin-top: 0;
+      margin-left: 1.25rem
+      @apply bg-gray-600 rounded-b mt-0;
     code
       font-family: 'M PLUS 1 Code Variable','JetBrains Mono Variable',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace
       background: var(--inline-code-bg)
@@ -85,7 +94,10 @@ const className = Astro.props.class;
           margin-right: 1rem
           width: 1rem
           color: rgba(255, 255, 255, 0.25)
-    pre
+    figure[data-rehype-pretty-code-figure]
+      background: var(--codeblock-bg) !important
+      border-radius: 0.75rem
+    figure[data-rehype-pretty-code-figure] > pre
       background: var(--codeblock-bg) !important
       border-radius: 0.75rem
       padding-left: 1.25rem
@@ -99,6 +111,25 @@ const className = Astro.props.class;
           background: var(--codeblock-selection)
         span.br::selection
           background: var(--codeblock-selection)
+    figure[data-rehype-pretty-code-figure] span[data-highlighted-line]
+      @apply border-teal-400 bg-teal-700/30;
+    figure[data-rehype-pretty-code-figure] code
+      @apply grid auto-rows-fr;
+    code[data-line-numbers]
+      counter-reset: line;
+    code[data-line-numbers] > [data-line]::before
+      counter-increment: line;
+      content: counter(line);
+      
+      display: inline-block;
+      width: 1rem;
+      margin-right: 1.5rem;
+      text-align: right;
+      color: gray;
+    code[data-line-numbers-max-digits="2"] > [data-line]::before
+      width: 2rem;
+    code[data-line-numbers-max-digits="3"] > [data-line]::before
+      width: 3rem;
     ul
       li
         &::marker
@@ -130,13 +161,85 @@ const className = Astro.props.class;
     img
       border-radius: 0.75rem
     hr
-      border-color: var(--line-divider)
-      border-style: dashed
+      border-top: 0.2rem dashed var(--meta-divider)
     iframe
       border-radius: 0.75rem
       margin-left: auto
       margin-right: auto
       max-width: 100%
+
+    .rlc-container
+      color: var(--secondary)
+      width: 100%
+      height: 9.5rem
+      margin: 0 auto 2rem
+      padding: 0
+      text-decoration: none
+      border: 0.4rem solid var(--link-hover)
+      border-radius: 1rem !important
+      display: flex
+      align-items: stretch
+      transition: background 0.15s ease-in-out
+    .rlc-container:hover
+      color: var(--primary)
+      background-color: var(--link-hover)
+      z-index: 100
+      text-decoration: none
+      text-decoration-line: none
+    .rlc-info
+      overflow: hidden
+      padding: 0.6rem 1rem
+      flex: 4 1 7rem
+      text-align: left
+      display: flex
+      flex-direction: column
+      justify-content: space-between
+    .rlc-title
+      font-size: 1.25rem
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+    .rlc-description
+      font-size: 0.875rem
+      overflow: hidden
+      line-height:1rem
+      height: 2.9rem
+      line-height: 1.5rem
+    .rlc-url-container
+      display: flex
+      align-items: center
+      height: 1.5rem
+      color: var(--primary)
+      text-decoration-line: underline
+      text-decoration-color: var(--link-underline)
+      text-decoration-thickness: 0.125rem
+      text-decoration-style: dashed
+      text-underline-offset: 0.25rem
+    .rlc-url-container:hover
+      text-decoration: none
+      text-decoration-line: none
+    .rlc-favicon
+      margin-right: 0.5rem
+      width: 1rem
+      height: 1rem
+      margin-top: 0 !important
+      margin-bottom: 0 !important
+    .rlc-url
+      font-size: 1rem
+      text-overflow: ellipsis
+      white-space: nowrap
+      overflow: hidden
+    .rlc-image-container
+      position: relative
+      flex: 1 1 7rem
+    .rlc-image
+      object-fit: cover
+      width: 100%
+      height: 100%
+      border-bottom-right-radius: 0.67rem
+      border-top-right-radius: 0.67rem
+      margin-top: 0 !important
+      margin-bottom: 0 !important
 </style>
 
 <style lang="css" is:global>

@@ -6,16 +6,23 @@ import {getSortedPosts} from "../utils/content-utils";
 import {getPostUrlBySlug} from "../utils/url-utils";
 import {PAGE_SIZE} from "../constants/constants";
 import PostPage from "../components/PostPage.astro";
+import { fetchApi, transformData } from '../library/strapi';
+import type { Blog, AstroBlog } from '../interfaces/blog';
 
 export async function getStaticPaths({ paginate }) {
-    const allBlogPosts = await getSortedPosts();
+    const allBlogPosts = await transformData<AstroBlog[]>({
+        data: await fetchApi<Blog[]>({
+            endpoint: 'blogs?populate=*', // the content type to fetch
+            wrappedByKey: 'data', // the key to unwrap the response
+        }),
+        type: 'blog',
+    });
     return paginate(allBlogPosts, { pageSize: PAGE_SIZE });
 }
 
 const {page} = Astro.props;
 
 const len = page.data.length;
-
 ---
 
 <MainGridLayout>
