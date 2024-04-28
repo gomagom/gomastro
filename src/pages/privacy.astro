@@ -1,0 +1,33 @@
+---
+
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+
+import { getEntry } from 'astro:content'
+import {i18n} from "../i18n/translation.ts";
+import I18nKey from "../i18n/i18nKey.ts";
+import Markdown from "@components/misc/Markdown.astro";
+
+import { TransformMarkdownToHtml, remarkReadingTime } from '../utils/custom-utils.ts';
+import { fetchApi, transformData } from '../library/strapi.ts';
+import type { Info, AstroInfo } from '../interfaces/blog.ts';
+
+const privacyPost = await transformData<AstroInfo>({
+    data: await fetchApi<Info[]>({
+        endpoint: 'infos', // the content type to fetch
+        wrappedByKey: 'data', // the key to unwrap the response
+    }),
+    type: 'privacy',
+});
+
+const content = await TransformMarkdownToHtml(privacyPost.data.content);
+
+---
+<MainGridLayout title={i18n(I18nKey.privacy)} description={i18n(I18nKey.privacy)}>
+    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full ">
+            <Markdown class="mt-2">
+                <Fragment set:html={content} />
+            </Markdown>
+        </div>
+    </div>
+</MainGridLayout>

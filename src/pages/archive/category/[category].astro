@@ -4,9 +4,17 @@ import MainGridLayout from "@layouts/MainGridLayout.astro";
 import ArchivePanel from "@components/ArchivePanel.astro";
 import {i18n} from "@i18n/translation";
 import I18nKey from "@i18n/i18nKey";
+import { fetchApi, transformData } from '../../../library/strapi';
+import type { Category, AstroCategory } from '../../../interfaces/blog';
 
 export async function getStaticPaths() {
-    const categories = await getCategoryList();
+    const categories = await transformData<AstroCategory[]>({
+        data: await fetchApi<Category[]>({
+            endpoint: 'categories?populate=*', // the content type to fetch
+            wrappedByKey: 'data', // the key to unwrap the response
+        }),
+        type: 'category',
+    });
     return categories.map(category => {
         return {
             params: {
@@ -20,6 +28,6 @@ const { category } = Astro.params;
 
 ---
 
-<MainGridLayout title={i18n(I18nKey.archive)}>
+<MainGridLayout title={i18n(I18nKey.archive)} description={i18n(I18nKey.archive)}>
     <ArchivePanel categories={[category]}></ArchivePanel>
 </MainGridLayout>

@@ -7,11 +7,12 @@ import I18nKey from "../i18n/i18nKey";
 interface Props {
     class: string;
     published: Date;
+    updated: Date;
     tags: string[];
     category: string;
     hideTagsForMobile: boolean;
 }
-const {published, tags, category, hideTagsForMobile} = Astro.props;
+const {published, updated, tags, category, hideTagsForMobile} = Astro.props;
 const className = Astro.props.class;
 ---
 
@@ -23,6 +24,15 @@ const className = Astro.props.class;
             <Icon name="material-symbols:calendar-today-outline-rounded" class="text-xl"></Icon>
         </div>
         <span class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(published)}</span>
+    </div>
+
+    <!-- update date -->
+    <div class="flex items-center">
+        <div class="meta-icon"
+        >
+            <Icon name="material-symbols:update-rounded" class="text-xl"></Icon>
+        </div>
+        <span class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(updated)}</span>
     </div>
 
     <!-- categories -->

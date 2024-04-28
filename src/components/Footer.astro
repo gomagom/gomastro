@@ -1,13 +1,18 @@
 ---
 
-import {profileConfig} from "../config";
+import { profileConfig } from '../config'
 
+const now_year = new Date().getFullYear()
+const start_year = profileConfig.start_year
+const year =
+  now_year === start_year ? start_year : `${start_year} - ${now_year}`
 ---
 
-<div class="card-base max-w-[var(--page-width)] min-h-[4.5rem] rounded-b-none mx-auto flex items-center px-6">
+<div class="card-base max-w-[var(--page-width)] min-h-[4.5rem] rounded-b-none mx-auto flex justify-center items-center px-6">
     <div class="transition text-50 text-sm">
-        © 2023 {profileConfig.name}. All Rights Reserved.
+        © {year} {profileConfig.name}. All Rights Reserved.
         <br>
-        Powered by <a class="link text-[var(--primary)] font-medium" target="_blank" href="https://github.com/saicaca/fuwari">Fuwari</a>
+        Project <a class="link text-[var(--primary)] font-medium" target="_blank" href="https://github.com/gomagom/gomastro">Gomastro</a>
+        Based on <a class="link text-[var(--primary)] font-medium" target="_blank" href="https://github.com/saicaca/fuwari">Fuwari</a>
     </div>
 </div>

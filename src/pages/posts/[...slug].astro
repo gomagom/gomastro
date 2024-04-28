@@ -11,10 +11,17 @@ import License from "@components/misc/License.astro";
 import {licenseConfig} from "src/config";
 import Markdown from "@components/misc/Markdown.astro";
 import path from "path";
+import { fetchApi, transformData } from '../../library/strapi';
+import type { Blog, AstroBlog } from '../../interfaces/blog';
+import { TransformMarkdownToHtml, remarkReadingTime } from '../../utils/custom-utils.ts';
 
 export async function getStaticPaths() {
-    const blogEntries = await getCollection('posts', ({ data }) => {
-        return import.meta.env.PROD ? data.draft !== true : true;
+    const blogEntries = await transformData<AstroBlog[]>({
+        data: await fetchApi<Blog[]>({
+            endpoint: 'blogs?populate=*', // the content type to fetch
+            wrappedByKey: 'data', // the key to unwrap the response
+        }),
+        type: 'blog',
     });
     return blogEntries.map(entry => ({
         params: { slug: entry.slug }, props: { entry },
@@ -22,9 +29,9 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const content = await TransformMarkdownToHtml(entry.data.content);
 
-const { remarkPluginFrontmatter } = await entry.render();
+remarkReadingTime(entry.data);
 
 ---
 <MainGridLayout banner={entry.data.image} title={entry.data.title}>
@@ -38,13 +45,13 @@ const { remarkPluginFrontmatter } = await entry.render();
                     <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
                         <Icon name="material-symbols:notes-rounded"></Icon>
                     </div>
-                    <div class="text-sm">{remarkPluginFrontmatter.words} {" " + i18n(I18nKey.wordsCount)}</div>
+                    <div class="text-sm">{entry.data.words} {" " + i18n(I18nKey.wordsCount)}</div>
                 </div>
                 <div class="flex flex-row items-center">
                     <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
                         <Icon name="material-symbols:schedule-outline-rounded"></Icon>
                     </div>
-                    <div class="text-sm">{remarkPluginFrontmatter.minutes} {" " + i18n(I18nKey.minutesCount)}</div>
+                    <div class="text-sm">{entry.data.minutes} {" " + i18n(I18nKey.minutesCount)}</div>
                 </div>
             </div>
 
@@ -67,6 +74,7 @@ const { remarkPluginFrontmatter } = await entry.render();
                 <PostMetadata
                         class="mb-5"
                         published={entry.data.published}
+                        updated={entry.data.updated}
                         tags={entry.data.tags}
                         category={entry.data.category}
                 ></PostMetadata>
@@ -81,7 +89,7 @@ const { remarkPluginFrontmatter } = await entry.render();
 
 
             <Markdown class="mb-6 markdown-content onload-animation">
-                <Content />
+                <Fragment set:html={content} />
             </Markdown>
 
             {licenseConfig.enable && <License title={entry.data.title} slug={entry.slug} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}

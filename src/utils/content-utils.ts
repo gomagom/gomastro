@@ -1,11 +1,17 @@
 import I18nKey from '@i18n/i18nKey'
 import { i18n } from '@i18n/translation'
 import { getCollection } from 'astro:content'
+import { fetchApi, transformData } from '../library/strapi';
+import type {Blog} from '../interfaces/blog';
 
 export async function getSortedPosts() {
-  const allBlogPosts = await getCollection('posts', ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
-  })
+  const allBlogPosts = await transformData<AstroBlog[]>({
+    data: await fetchApi<Blog[]>({
+        endpoint: 'blogs?populate=*', // the content type to fetch
+        wrappedByKey: 'data', // the key to unwrap the response
+    }),
+    type: 'blog',
+  });
   const sorted = allBlogPosts.sort((a, b) => {
     const dateA = new Date(a.data.published)
     const dateB = new Date(b.data.published)
@@ -30,9 +36,13 @@ export type Tag = {
 }
 
 export async function getTagList(): Promise<Tag[]> {
-  const allBlogPosts = await getCollection('posts', ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
-  })
+  const allBlogPosts = await transformData<AstroBlog[]>({
+    data: await fetchApi<Blog[]>({
+        endpoint: 'blogs?populate=*', // the content type to fetch
+        wrappedByKey: 'data', // the key to unwrap the response
+    }),
+    type: 'blog',
+  });
 
   const countMap: { [key: string]: number } = {}
   allBlogPosts.map(post => {
@@ -44,7 +54,7 @@ export async function getTagList(): Promise<Tag[]> {
 
   // sort tags
   const keys: string[] = Object.keys(countMap).sort((a, b) => {
-    return a.toLowerCase().localeCompare(b.toLowerCase())
+    return a.toLowerCase().localeCompare(b.toLowerCase(), 'ja')
   })
 
   return keys.map(key => ({ name: key, count: countMap[key] }))
@@ -56,9 +66,13 @@ export type Category = {
 }
 
 export async function getCategoryList(): Promise<Category[]> {
-  const allBlogPosts = await getCollection('posts', ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
-  })
+  const allBlogPosts = await transformData<AstroBlog[]>({
+    data: await fetchApi<Blog[]>({
+        endpoint: 'blogs?populate=*', // the content type to fetch
+        wrappedByKey: 'data', // the key to unwrap the response
+    }),
+    type: 'blog',
+  });
   const count: { [key: string]: number } = {}
   allBlogPosts.map(post => {
     if (!post.data.category) {
@@ -72,7 +86,7 @@ export async function getCategoryList(): Promise<Category[]> {
   })
 
   const lst = Object.keys(count).sort((a, b) => {
-    return a.toLowerCase().localeCompare(b.toLowerCase())
+    return a.toLowerCase().localeCompare(b.toLowerCase(), 'ja')
   })
 
   const ret: Category[] = []
