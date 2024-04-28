@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
   lang: 'ja',
   themeHue: 250,
   banner: {
-    enable: true,
+    enable: false,
     src: 'assets/images/demo-banner.png',
   },
   favicon: [    // Leave this array empty to use the default favicon
@@ -29,6 +29,7 @@ export const navBarConfig: NavBarConfig = {
     LinkPreset.Home,
     LinkPreset.Archive,
     LinkPreset.About,
+    LinkPreset.Privacy,
     {
       name: 'iSarver',
       url: 'https://blog.isarver.com/',
@@ -46,7 +47,7 @@ export const profileConfig: ProfileConfig = {
     {
       name: 'Twitter',
       icon: 'fa6-brands:x-twitter',
-      url: 'https://twitter.com',
+      url: 'https://twitter.com/gomatamago_0',
     },
     {
       name: 'Steam',

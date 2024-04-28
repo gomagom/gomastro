@@ -125,6 +125,19 @@ export async function transformData<T>({ data, type }: Transform): Promise<T> {
       )[0]
       break
     }
+    case 'privacy': {
+      transformed = data.map((content: any) => ({
+        id: String(content.id),
+        data: {
+          title: content.attributes.title,
+          content: content.attributes.content,
+        },
+      }))
+      transformed = transformed.filter(
+        (content: any) => content.data.title === 'Privacy',
+      )[0]
+      break
+    }
   }
   return transformed as T
 }
