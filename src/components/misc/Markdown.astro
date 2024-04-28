@@ -1,8 +1,5 @@
 ---
-import '@fontsource-variable/jetbrains-mono';
-import '@fontsource-variable/jetbrains-mono/wght-italic.css';
-// Supports weights 100-700
-import '@fontsource-variable/m-plus-1-code';
+import '@fontsource/m-plus-1-code';
 
 interface Props {
     class: string;
@@ -74,7 +71,7 @@ const className = Astro.props.class;
       margin-left: 1.25rem
       @apply bg-gray-600 rounded-b mt-0;
     code
-      font-family: 'M PLUS 1 Code Variable','JetBrains Mono Variable',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace
+      font-family: 'M PLUS 1 Code',monospace
       background: var(--inline-code-bg)
       color: var(--inline-code-color)
       padding: 0.125rem 0.25rem
